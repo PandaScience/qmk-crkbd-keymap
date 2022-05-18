@@ -46,8 +46,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // this unfortunatley breaks tap-repeat on space -> use SYM layer
 #define SW_SPC SH_T(KC_SPC)
 #define SW_ENT SH_T(KC_ENT)
-// #define SW_SPC LT(SWP, KC_SPC)
-// #define SW_ENT LT(SWP, KC_ENT)
 
 #define SYS_ESC LT(SYS, KC_ESC)
 #define NUM_TAB LT(NUM, KC_TAB)
@@ -68,18 +66,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                            KC_ESC, NUM_TAB,  SW_SPC,     SW_ENT, KC_BSPC,  KC_DEL
                                       //`--------------------------'  `--------------------------'
   ),
-
-//  [SWP] = LAYOUT_split_3x6_3(
-//  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-//      SYS_ESC,    KC_Z,    KC_L,    KC_C,    KC_G,    KC_V,                         KC_Y, KC_COMM,    KC_O,  KC_DOT,    KC_K, SYS_ESC,
-//  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-//      MO(SYM),     C_S,     A_N,     W_R,   NAV_T,    KC_D,                         KC_D,   NAV_I,     W_E,     A_A,     C_H, MO(SYM),
-//  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-//      sC_SLSH,     S_J,    sA_M,    sW_W,    KC_P,    KC_B,                         KC_F, KC_RBRC, sW_LBRC,    sA_Q,     S_X, sC_SLSH,
-//  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-//                                           KC_DEL, KC_BSPC, ___O___,    ___O___, NUM_TAB,  KC_ESC
-//                                      //`--------------------------'  `--------------------------'
-//  ),
 
   [SYM] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.

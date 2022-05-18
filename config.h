@@ -20,30 +20,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-//#define USE_MATRIX_I2C
-
-/* Select hand configuration */
-
-// #define MASTER_LEFT
-// #define MASTER_RIGHT
+// ---------- HARDWARE CONFIG -------------------------------------------------
 // for EE_HANDS to work automatically, run once from qmk root path:
 // make crkbd:pandascience:dfu-split-left
 // make crkbd:pandascience:dfu-split-right
 #define EE_HANDS
 
-// #define USE_SERIAL_PD2
+// detect primary/secondary reliably
 #define SPLIT_USB_DETECT
 
+// ---------- TAP vs HOLD SETTINGS --------------------------------------------
 #define TAPPING_TERM 200
-// #define TAPPING_FORCE_HOLD
-// #define RETRO_TAPPING
 #define IGNORE_MOD_TAP_INTERRUPT
 #undef PERMISSIVE_HOLD
 #undef PREVENT_STUCK_MODIFIERS
 
+// ---------- DISABLE STUFF & REDUZE SIZE
+#undef LOCKING_SUPPORT_ENABLE
+#undef LOCKING_RESYNC_ENABLE
+#define NO_ACTION_ONESHOT
+#define NO_MUSIC_MODE
+#define LAYER_STATE_8BIT
+// #define LAYER_STATE_16BIT
 
+// ---------- OLED CONFIG -----------------------------------------------------
 #define OLED_FONT_H "keyboards/crkbd/lib/glcdfont.c"
 
+
+// ---------- RGB LIGHTING ----------------------------------------------------
 #ifdef RGBLIGHT_ENABLE
     #undef RGBLED_NUM
     #define RGBLIGHT_ANIMATIONS
