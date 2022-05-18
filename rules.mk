@@ -20,6 +20,12 @@ KEY_OVERRIDE_ENABLE = yes
 # required for SH_T
 SWAP_HANDS_ENABLE = yes
 
+# required for key combos
+COMBO_ENABLE = yes
+
 # use advanced matrix effects (or do not and save space)
 RGBLIGHT_ENABLE = no
 RGB_MATRIX_ENABLE = yes
+
+# add Caps Words code
+SRC += extern/getreuer/features/caps_word.c

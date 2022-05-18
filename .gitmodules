@@ -1,0 +1,3 @@
+[submodule "extern/getreuer"]
+	path = extern/getreuer
+	url = https://github.com/getreuer/qmk-keymap
