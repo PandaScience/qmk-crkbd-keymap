@@ -25,15 +25,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* Select hand configuration */
 
 // #define MASTER_LEFT
-#define MASTER_RIGHT
-// #define EE_HANDS
+// #define MASTER_RIGHT
+// for EE_HANDS to work automatically, run once from qmk root path:
+// make crkbd:pandascience:dfu-split-left
+// make crkbd:pandascience:dfu-split-right
+#define EE_HANDS
 
 // #define USE_SERIAL_PD2
 #define SPLIT_USB_DETECT
 
 #define TAPPING_TERM 200
-#define TAPPING_FORCE_HOLD
-#define RETRO_TAPPING
+// #define TAPPING_FORCE_HOLD
+// #define RETRO_TAPPING
 #define IGNORE_MOD_TAP_INTERRUPT
 #undef PERMISSIVE_HOLD
 #undef PREVENT_STUCK_MODIFIERS
@@ -66,7 +69,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    define RGB_MATRIX_SPD_STEP 10
 #define RGB_MATRIX_STARTUP_SPD 127 // Sets the default animation speed, if none has been set
 
-#define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_HUE_BREATHING
+// https://www.youtube.com/watch?v=7f3usatOIKM
+
 /* Disable the animations you don't want/need.  You will need to disable a good number of these    *
  * because they take up a lot of space.  Disable until you can successfully compile your firmware. */
 // RGB Matrix Animation modes. Explicitly enabled
@@ -105,8 +109,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #    define ENABLE_RGB_MATRIX_TYPING_HEATMAP
 // #    define ENABLE_RGB_MATRIX_DIGITAL_RAIN
 // enabled only of RGB_MATRIX_KEYPRESSES or RGB_MATRIX_KEYRELEASES is defined
-#    define ENABLE_RGB_MATRIX_SOLID_REACTIVE_SIMPLE
-#    define ENABLE_RGB_MATRIX_SOLID_REACTIVE
+// #    define ENABLE_RGB_MATRIX_SOLID_REACTIVE_SIMPLE
+// #    define ENABLE_RGB_MATRIX_SOLID_REACTIVE
 // #    define ENABLE_RGB_MATRIX_SOLID_REACTIVE_WIDE
 // #    define ENABLE_RGB_MATRIX_SOLID_REACTIVE_MULTIWIDE
 // #    define ENABLE_RGB_MATRIX_SOLID_REACTIVE_CROSS
@@ -117,4 +121,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #    define ENABLE_RGB_MATRIX_MULTISPLASH
 // #    define ENABLE_RGB_MATRIX_SOLID_SPLASH
 // #    define ENABLE_RGB_MATRIX_SOLID_MULTISPLASH
+
+#define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_HUE_BREATHING
 #endif

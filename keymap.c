@@ -17,135 +17,216 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include QMK_KEYBOARD_H
+#include "alphabet.h"
 
-enum layers { BASE, SYM, NUM, FUN, NAV, MOUSE, MEDIA, SYS};
+#define ___x___ KC_NO
+#define ___O___ KC_NO
+#ifndef _______
+#define _______ KC_TRNS
+#endif
+
+// override default shifted versions of (,,<) and (.,>) to (,,;) and (.,:)
+// const key_override_t delete_key_override = ko_make_basic(
+// 	MOD_MASK_SHIFT, KC_BSPACE, KC_DELETE
+// );
+// const key_override_t comma_key_override = ko_make_basic(
+// 	MOD_MASK_SHIFT, KC_COMM, KC_SCLN
+// );
+// const key_override_t dot_key_override = ko_make_basic(
+// 	MOD_MASK_SHIFT, KC_DOT, KC_COLN
+// );
+// This globally defines all key overrides to be used
+// const key_override_t **key_overrides = (const key_override_t *[]){
+//     /* &delete_key_override, */
+//     NULL // Null terminate the array of overrides!
+// };
+
+typedef enum {
+    TD_NONE,
+    TD_UNKNOWN,
+    TD_SINGLE_TAP,
+    TD_SINGLE_HOLD,
+    TD_DOUBLE_TAP,
+    TD_DOUBLE_HOLD,
+    TD_DOUBLE_SINGLE_TAP, // Send two single taps
+    TD_TRIPLE_TAP,
+    TD_TRIPLE_HOLD
+} td_state_t;
+
+typedef struct {
+    bool is_press_action;
+    td_state_t state;
+} td_tap_t;
+
+// Tap Dance declarations
+td_state_t cur_dance(qk_tap_dance_state_t *state);
+
+void generic_finished(qk_tap_dance_state_t *state, void *user_data, uint16_t kc, uint16_t kc_h);
+void generic_reset(qk_tap_dance_state_t *state, void *user_data, uint16_t kc, uint16_t kc_h);
+void win_finished(qk_tap_dance_state_t *state, void *user_data);
+void win_reset(qk_tap_dance_state_t *state, void *user_data);
+void ctl_finished(qk_tap_dance_state_t *state, void *user_data);
+void ctl_reset(qk_tap_dance_state_t *state, void *user_data);
+
+enum {
+    C_H,
+    W_E,
+};
 
 
-#define ___x___  KC_NO
 
-#define WIN_H    LGUI_T(KC_H)
-#define ALT_A    LALT_T(KC_A)
-#define AGR_Q    ALGR_T(KC_Q)
-#define CTL_E    LCTL_T(KC_E)
-#define SHFT_I   LSFT_T(KC_I)
+// Tap Dance definitions
+qk_tap_dance_action_t tap_dance_actions[] = {
+    [C_H] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, ctl_finished, ctl_reset),
+    [W_E] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, win_finished, win_reset)
+};
 
-#define SHFT_T   LSFT_T(KC_T)
-#define CTL_R    LCTL_T(KC_R)
-#define ALT_N    LALT_T(KC_N)
-#define WIN_S    LGUI_T(KC_S)
-
-#define UC_EUR   ALGR(KC_5)
-
-#define MSE_ESC  LT(MOUSE, KC_ESC)
-#define NUM_SPC  LT(NUM, KC_SPC)
-#define NAV_TAB  LT(NAV, KC_TAB)
-#define SYS_ESC  LT(SYS, KC_ESC)
+enum layers {BASE, SYM, NUM, FUN, NAV, SYS};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [BASE] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      SYS_ESC,    KC_K,  KC_DOT,    KC_O, KC_COMM,    KC_Y,                         KC_V,    KC_G,    KC_C,    KC_L,    KC_Z,  KC_ESC,
+     SYS(ESC),    KC_K,  KC_DOT,    KC_O, KC_COMM,    KC_Y,                         KC_V,    KC_G,    KC_C,    KC_L,    KC_Z,SYS(ESC),
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      MO(SYM),   WIN_H,   ALT_A,   CTL_E,  SHFT_I,    KC_U,                         KC_D,  SHFT_T,   CTL_R,   ALT_N,   WIN_S, MO(SYM),
+      MO(SYM), TD(C_H),  AGR(A), TD(W_E),  NAV(I),    KC_U,                         KC_D,   NAV(T), WIN(R),  AGR(N),  CTL(S), MO(SYM),
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_SCLN,    KC_X,   AGR_Q, KC_LBRC, KC_RBRC,    KC_F,                         KC_B,    KC_P,    KC_W,    KC_M,    KC_J, KC_SLSH,
+      KC_SCLN,  SFT(X),    KC_Q, KC_LBRC, KC_RBRC,    KC_F,                         KC_B,    KC_P,    KC_W,    KC_M,  SFT(J), KC_SLSH,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          MSE_ESC, NAV_TAB, NUM_SPC,     KC_ENT, KC_BSPC,  KC_DEL
+                                           KC_ESC,NUM(TAB),  KC_SPC,     KC_ENT, KC_BSPC,  KC_DEL
                                       //`--------------------------'  `--------------------------'
   ),
 
   [SYM] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      ___x___, ___x___, KC_UNDS, KC_LBRC, KC_RBRC, KC_CIRC,                      KC_EXLM,   KC_LT,   KC_GT,  KC_EQL, KC_AMPR, KC_SLSH,
+      _______, ___x___, KC_UNDS, KC_LBRC, KC_RBRC, KC_CIRC,                      KC_EXLM,   KC_LT,   KC_GT,  KC_EQL, KC_AMPR, KC_SLSH,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      ___x___, KC_BSLS, KC_SLSH, KC_LCBR, KC_RCBR, KC_ASTR,                      KC_QUES, KC_LPRN, KC_RPRN, KC_MINS, KC_COLN,   KC_AT,
+      ___O___, KC_BSLS, KC_SLSH, KC_LCBR, KC_RCBR, KC_ASTR,                      KC_QUES, KC_LPRN, KC_RPRN, KC_MINS, KC_COLN,   KC_AT,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      ___x___, KC_HASH,  KC_DLR, KC_PIPE, KC_TILD,  KC_GRV,                      KC_PLUS, KC_PERC, KC_DQUO, KC_QUOT, KC_SCLN,  UC_EUR,
+      _______, KC_HASH,  KC_DLR, KC_PIPE, KC_TILD,  KC_GRV,                      KC_PLUS, KC_PERC, KC_DQUO, KC_QUOT, KC_SCLN,  UC_EUR,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          MSE_ESC, NAV_TAB, NUM_SPC,     KC_ENT, KC_BSPC,  KC_DEL
+                                          _______, _______, _______,    _______, _______, _______
                                       //`--------------------------'  `--------------------------'
   ),
 
   [NUM] = LAYOUT_split_3x6_3(
   //,------------------------------------------------------.                    ,-----------------------------------------------------.
-       ___x___, ___x___, ___x___, ___x___, ___x___, ___x___,                      KC_ASTR,    KC_7,    KC_8,    KC_9, ___x___, ___x___,
+       _______, ___x___, ___x___, ___x___, ___x___, ___x___,                      KC_ASTR,    KC_7,    KC_8,    KC_9, KC_SLSH, _______,
   //|---------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-       MO(FUN), KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, ___x___,                      KC_PLUS,    KC_4,    KC_5,    KC_6, ___x___, ___x___,
+       MO(FUN), KC_LCTL, KC_ALGR, KC_LGUI, ___x___, ___x___,                      KC_PLUS,    KC_4,    KC_5,    KC_6, KC_MINS, ___x___,
   //|---------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-       ___x___, ___x___, ___x___, ___x___, ___x___, ___x___,                      KC_SLSH,    KC_1,    KC_2,    KC_3, KC_COMM, ___x___,
+       ___x___, KC_LSFT, ___x___, ___x___, ___x___, ___x___,                       KC_DOT,    KC_1,    KC_2,    KC_3, KC_COMM, ___x___,
   //|---------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                           ___x___, ___x___, ___x___,    KC_MINS,    KC_0,  KC_DOT
+                                           _______, ___O___, _______,    KC_MINS,    KC_0,  KC_DOT
                                        //`--------------------------'  `--------------------------'
   ),
 
   [FUN] = LAYOUT_split_3x6_3(
   //,------------------------------------------------------.                    ,-----------------------------------------------------.
-       ___x___, ___x___, ___x___, ___x___, ___x___, ___x___,                       KC_F12,   KC_F7,   KC_F8,   KC_F9, ___x___, ___x___,
+       _______, ___x___, ___x___, ___x___, ___x___, ___x___,                       KC_F12,   KC_F7,   KC_F8,   KC_F9, ___x___, _______,
   //|---------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-       ___x___, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, ___x___,                       KC_F11,   KC_F4,   KC_F5,   KC_F6, ___x___, ___x___,
+       ___O___, KC_LCTL, KC_ALGR, ___x___, KC_LGUI, ___x___,                       KC_F11,   KC_F4,   KC_F5,   KC_F6, ___x___, ___x___,
   //|---------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-       ___x___, ___x___, ___x___, ___x___, ___x___, ___x___,                       KC_F10,   KC_F1,   KC_F2,   KC_F3, ___x___, ___x___,
+       ___x___, KC_LSFT, ___x___, ___x___, ___x___, ___x___,                       KC_F10,   KC_F1,   KC_F2,   KC_F3, ___x___, ___x___,
   //|---------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                           ___x___, ___x___, ___x___,     KC_ENT,  KC_ESC, ___x___
-                                       //`--------------------------'  `--------------------------'
-  ),
-
-  [MOUSE] = LAYOUT_split_3x6_3(
-  //,------------------------------------------------------.                    ,-----------------------------------------------------.
-       ___x___, ___x___, ___x___, ___x___, ___x___, ___x___,                      KC_AGIN, KC_PSTE, KC_COPY,  KC_CUT, KC_UNDO, ___x___,
-  //|---------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-       ___x___, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, ___x___,                      ___x___, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, ___x___,
-  //|---------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-       ___x___, ___x___, ___x___, ___x___, ___x___, ___x___,                      ___x___, KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, ___x___,
-  //|---------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                           ___x___, ___x___, ___x___,    KC_BTN1, KC_BTN3, KC_BTN2
+                                           ___x___, ___O___, ___x___,    ___x___, ___x___, ___x___
                                        //`--------------------------'  `--------------------------'
   ),
 
   [NAV] = LAYOUT_split_3x6_3(
   //,------------------------------------------------------.                    ,-----------------------------------------------------.
-       ___x___, ___x___, ___x___, ___x___, ___x___, ___x___,                       KC_INS, KC_HOME, KC_PGDN, KC_PGUP,  KC_END, ___x___,
+       ___x___, ___x___, KC_WH_D, KC_MS_U, KC_WH_U, KC_AGIN,                      ___x___, KC_HOME, KC_PGDN, KC_PGUP,  KC_END, ___x___,
   //|---------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-       ___x___, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, ___x___,                      KC_CAPS, KC_LEFT, KC_DOWN,   KC_UP, KC_RGHT, ___x___,
+       ___x___, KC_LCTL, KC_MS_L, KC_MS_D, KC_MS_R, KC_UNDO,                      ___x___, KC_LEFT, KC_DOWN,   KC_UP, KC_RGHT, ___x___,
   //|---------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-       ___x___, ___x___, ___x___, ___x___, ___x___, ___x___,                      KC_UNDO,  KC_CUT, KC_COPY, KC_PSTE, KC_AGIN, ___x___,
+       ___x___, KC_LSFT, KC_CUT,  KC_COPY, KC_PSTE, ___x___,                      ___x___, KC_PSTE, KC_COPY,  KC_CUT,  KC_INS, ___x___,
   //|---------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                           ___x___, ___x___, ___x___,    KC_BTN1, KC_BTN3, KC_BTN2
-                                      //`--------------------------'  `--------------------------'
+                                           ___x___, KC_LGUI, KC_BTN1,    KC_BTN1, KC_BTN3, KC_BTN2
+                                       //`--------------------------'  `--------------------------'
   ),
 
   [SYS] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      ___x___,   RESET, ___x___, ___x___, ___x___, ___x___,                      ___x___, ___x___, ___x___, ___x___, ___x___,   RESET,
+      ___x___, RGB_M_P, RGB_M_B, RGB_M_R, ___x___, ___x___,                      ___x___, ___x___, KC_VOLU, ___x___, ___x___, ___x___,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      ___x___, RGB_MOD, RGB_HUI, RGB_SAI, RGB_VAI, RGB_SPI,                      ___x___, ___x___, ___x___, ___x___, ___x___, ___x___,
+        RESET, RGB_MOD, RGB_HUI, RGB_SAI, RGB_VAI, RGB_SPI,                      ___x___, KC_BRIU, KC_MUTE, ___x___, ___x___,   RESET,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      RGB_TOG,RGB_RMOD, RGB_HUD, RGB_SAD, RGB_VAD, RGB_SPD,                      ___x___, ___x___, ___x___, ___x___, ___x___, ___x___,
+      RGB_TOG,RGB_RMOD, RGB_HUD, RGB_SAD, RGB_VAD, RGB_SPD,                      ___x___, KC_BRID, KC_VOLD, ___x___, ___x___, ___x___,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          ___x___, ___x___, ___x___,    ___x___, ___x___, ___x___
+                                          ___x___, ___x___, ___x___,    KC_MPLY, KC_MPRV, KC_MNXT
                                       //`--------------------------'  `--------------------------'
   )
 };
 
-// override default shifted versions of (,,<) and (.,>) to (,,;) and (.,:)
-const key_override_t delete_key_override = ko_make_basic(
-	MOD_MASK_SHIFT, KC_BSPACE, KC_DELETE
-);
-const key_override_t comma_key_override = ko_make_basic(
-	MOD_MASK_SHIFT, KC_COMM, KC_SCLN
-);
-const key_override_t dot_key_override = ko_make_basic(
-	MOD_MASK_SHIFT, KC_DOT, KC_COLN
-);
-
-// This globally defines all key overrides to be used
-const key_override_t **key_overrides = (const key_override_t *[]){
-    /* &delete_key_override, */
-    NULL // Null terminate the array of overrides!
-};
 
 
 
+
+// ---------- TAP DANCE CONFIG ------------------------------------------------
+// see https://docs.qmk.fm/#/feature_tap_dance?id=example-4
+td_state_t cur_dance(qk_tap_dance_state_t *state) {
+    if (state->count == 1) {
+        if (state->interrupted || !state->pressed) return TD_SINGLE_TAP;
+        else return TD_SINGLE_HOLD;
+    } else if (state->count == 2) {
+        if (state->interrupted) return TD_DOUBLE_SINGLE_TAP;
+        else if (state->pressed) return TD_DOUBLE_HOLD;
+        else return TD_DOUBLE_TAP;
+    } else return TD_UNKNOWN;
+}
+
+static td_tap_t tap_state = {.is_press_action = true, .state = TD_NONE};
+
+void win_finished(qk_tap_dance_state_t *state, void *user_data) {
+	return generic_finished(state, user_data, KC_E, KC_LGUI);
+}
+void win_reset(qk_tap_dance_state_t *state, void *user_data) {
+	return generic_reset(state, user_data, KC_E, KC_LGUI);
+}
+void ctl_finished(qk_tap_dance_state_t *state, void *user_data) {
+	return generic_finished(state, user_data, KC_H, KC_LCTL);
+}
+void ctl_reset(qk_tap_dance_state_t *state, void *user_data) {
+	return generic_reset(state, user_data, KC_H, KC_LCTL);
+}
+
+void generic_finished(
+    qk_tap_dance_state_t *state,
+    void *user_data,
+    uint16_t kc,
+    uint16_t kc_h
+){
+    tap_state.state = cur_dance(state);
+    switch (tap_state.state) {
+        case TD_SINGLE_TAP: register_code(kc); break;
+        case TD_SINGLE_HOLD: register_code(kc_h); break;
+        case TD_DOUBLE_TAP: tap_code(kc); register_code(kc); break;
+        case TD_DOUBLE_HOLD: register_code16(LSFT(kc_h)); break;
+        case TD_DOUBLE_SINGLE_TAP: tap_code(kc); register_code(kc); break;
+        default: ;
+    }
+}
+
+void generic_reset(
+    qk_tap_dance_state_t *state,
+    void *user_data,
+    uint16_t kc,
+    uint16_t kc_h
+){
+    switch (tap_state.state) {
+        case TD_SINGLE_TAP: unregister_code(kc); break;
+        case TD_SINGLE_HOLD: unregister_code(kc_h); break;
+        case TD_DOUBLE_TAP: unregister_code(kc); break;
+        case TD_DOUBLE_HOLD: unregister_code16(LSFT(kc_h)); break;
+        case TD_DOUBLE_SINGLE_TAP: unregister_code(kc); break;
+        default: ;
+    }
+    tap_state.state = TD_NONE;
+}
+
+
+
+
+// ---------- OLED CONFIG -----------------------------------------------------
 
 #ifdef OLED_ENABLE
 #include <stdio.h>
@@ -169,17 +250,11 @@ void oled_render_layer_state(void) {
         case NUM:
             oled_write_ln_P(PSTR("Num"), false);
             break;
-        case NAV:
-            oled_write_ln_P(PSTR("Nav"), false);
-            break;
         case FUN:
             oled_write_ln_P(PSTR("Fun"), false);
             break;
-        case MEDIA:
-            oled_write_ln_P(PSTR("Media"), false);
-            break;
-        case MOUSE:
-            oled_write_ln_P(PSTR("Mouse"), false);
+        case NAV:
+            oled_write_ln_P(PSTR("Nav"), false);
             break;
         case SYS:
             oled_write_ln_P(PSTR("Sys"), false);

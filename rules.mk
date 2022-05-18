@@ -6,6 +6,8 @@ LTO_ENABLE = yes
 # required for key_override_t
 KEY_OVERRIDE_ENABLE = yes
 
+TAP_DANCE_ENABLE = yes
+
 RGBLIGHT_ENABLE = no
 RGB_MATRIX_ENABLE = yes
 
