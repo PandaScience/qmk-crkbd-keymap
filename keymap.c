@@ -56,6 +56,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 enum layers {BSE, SWP, SYM, NUM, FUN, NAV, SYS};
 
+enum custom_keycodes {
+    UPDIR = SAFE_RANGE,
+    SCOPE,
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [BSE] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
@@ -170,10 +175,27 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
 // https://github.com/qmk/qmk_firmware/blob/master/docs/custom_quantum_functions.md#programming-the-behavior-of-any-keycode-idprogramming-the-behavior-of-any-keycode
 // https://getreuer.info/posts/keyboards/caps-word/index.html
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
-  if (!process_caps_word(keycode, record)) { return false; }
-  // Your macros ...
+    if (!process_caps_word(keycode, record)) { return false; }
 
-  return true;
+    /* const uint8_t mods = get_mods(); */
+    /* const uint8_t oneshot_mods = get_oneshot_mods(); */
+    /* const bool shifted = (mods | oneshot_mods) & MOD_MASK_SHIFT; */
+
+    // for more unicode, see https://github.com/getreuer/qmk-keymap/blob/main/keymap.c
+    if (record->event.pressed) {
+        switch (keycode) {
+            case UPDIR:
+                SEND_STRING("../");
+                return false;
+
+            case SCOPE:
+                SEND_STRING("::");
+                return false;
+        }
+
+    }
+
+    return true;
 }
 
 
