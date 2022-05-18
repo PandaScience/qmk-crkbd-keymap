@@ -1,0 +1,12 @@
+OLED_ENABLE = yes
+OLED_DRIVER = SSD1306
+BOOTLOADER = atmel-dfu
+LTO_ENABLE = yes
+
+# required for key_override_t
+KEY_OVERRIDE_ENABLE = yes
+
+RGBLIGHT_ENABLE = no
+RGB_MATRIX_ENABLE = yes
+
+# MOUSEKEY_ENABLE = no
