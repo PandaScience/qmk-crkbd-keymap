@@ -129,87 +129,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 
-
-
 // ---------- OLED CONFIG -----------------------------------------------------
-
 #ifdef OLED_ENABLE
-#include <stdio.h>
-
-oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-  if (!is_keyboard_master()) {
-    return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
-  }
-  return rotation;
-}
-
-void oled_render_layer_state(void) {
-    oled_write_P(PSTR("Layer: "), false);
-    switch (layer_state) {
-        case BASE:
-            oled_write_ln_P(PSTR("Base"), false);
-            break;
-        case SYM:
-            oled_write_ln_P(PSTR("Sym"), false);
-            break;
-        case NUM:
-            oled_write_ln_P(PSTR("Num"), false);
-            break;
-        case FUN:
-            oled_write_ln_P(PSTR("Fun"), false);
-            break;
-        case NAV:
-            oled_write_ln_P(PSTR("Nav"), false);
-            break;
-        case SYS:
-            oled_write_ln_P(PSTR("Sys"), false);
-            break;
-    }
-}
-
-
-char keylog_str[24] = {};
-
-const char code_to_name[60] = {
-    ' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f',
-    'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
-    'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-    '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
-    'R', 'E', 'B', 'T', '_', '-', '=', '[', ']', '\\',
-    '#', ';', '\'', '`', ',', '.', '/', ' ', ' ', ' '};
-
-void set_keylog(uint16_t keycode, keyrecord_t *record) {
-  char name = ' ';
-    if ((keycode >= QK_MOD_TAP && keycode <= QK_MOD_TAP_MAX) ||
-        (keycode >= QK_LAYER_TAP && keycode <= QK_LAYER_TAP_MAX)) { keycode = keycode & 0xFF; }
-  if (keycode < 60) {
-    name = code_to_name[keycode];
-  }
-
-  // update keylog
-  snprintf(keylog_str, sizeof(keylog_str), "%dx%d, k%2d : %c",
-           record->event.key.row, record->event.key.col,
-           keycode, name);
-}
-
-void oled_render_keylog(void) {
-    oled_write(keylog_str, false);
-}
-
-void render_bootmagic_status(bool status) {
-    /* Show Ctrl-Gui Swap options */
-    static const char PROGMEM logo[][2][3] = {
-        {{0x97, 0x98, 0}, {0xb7, 0xb8, 0}},
-        {{0x95, 0x96, 0}, {0xb5, 0xb6, 0}},
-    };
-    if (status) {
-        oled_write_ln_P(logo[0][0], false);
-        oled_write_ln_P(logo[0][1], false);
-    } else {
-        oled_write_ln_P(logo[1][0], false);
-        oled_write_ln_P(logo[1][1], false);
-    }
-}
 
 void oled_render_logo(void) {
     static const char PROGMEM crkbd_logo[] = {
@@ -220,20 +141,81 @@ void oled_render_logo(void) {
     oled_write_P(crkbd_logo, false);
 }
 
+void oled_render_layer_state(void) {
+    // ascii art text: https://texteditor.com/multiline-text-art/
+    switch (get_highest_layer(layer_state)) {
+        case BSE:
+            /* oled_write_ln_P(PSTR("BSE"), true); */
+            oled_write_ln_P(PSTR(" _  __ __"), false);
+            oled_write_ln_P(PSTR("|_)(_ |_ "), false);
+            oled_write_ln_P(PSTR("|_)__)|__"), false);
+            break;
+        case SYM:
+            /* oled_write_ln_P(PSTR("SYM"), true); */
+            oled_write_ln_P(PSTR(" __      "), false);
+            oled_write_ln_P(PSTR("(_ \\ /|V|"), false);
+            oled_write_ln_P(PSTR("__) | | |"), false);
+            break;
+        case NUM:
+            /* oled_write_ln_P(PSTR("NUM"), true); */
+            oled_write_ln_P(PSTR("         "), false);
+            oled_write_ln_P(PSTR("|\\|| ||V|"), false);
+            oled_write_ln_P(PSTR("| ||_|| |"), false);
+            break;
+        case FUN:
+            /* oled_write_ln_P(PSTR("FUN"), true); */
+            oled_write_ln_P(PSTR(" __      "), false);
+            oled_write_ln_P(PSTR("|_ | ||\\|"), false);
+            oled_write_ln_P(PSTR("|  |_|| |"), false);
+            break;
+        case NAV:
+            /* oled_write_ln_P(PSTR("NAV"), true); */
+            oled_write_ln_P(PSTR("    _    "), false);
+            oled_write_ln_P(PSTR("|\\||_|\\ /"), false);
+            oled_write_ln_P(PSTR("| || | V "), false);
+            break;
+        case SYS:
+            /* oled_write_ln_P(PSTR("SYS"), true); */
+            oled_write_ln_P(PSTR(" __    __"), false);
+            oled_write_ln_P(PSTR("(_ \\ /(_ "), false);
+            oled_write_ln_P(PSTR("__) | __)"), false);
+            break;
+        default:
+            /* oled_write_ln_P(PSTR("> ?"), false); */
+            oled_write_ln_P(PSTR("      _  "), false);
+            oled_write_ln_P(PSTR("|\\| /|_| "), false);
+            oled_write_ln_P(PSTR("| |/ | | "), false);
+    }
+
+    oled_set_cursor(11, 0);
+    oled_write_P(get_mods() & MOD_MASK_SHIFT ? PSTR("S") : PSTR(" "), false);
+    oled_write_P(get_mods() & MOD_MASK_CTRL  ? PSTR("C") : PSTR(" "), false);
+    oled_write_P(get_mods() & MOD_MASK_ALT   ? PSTR("A") : PSTR(" "), false);
+    oled_write_P(get_mods() & MOD_MASK_GUI   ? PSTR("G") : PSTR(" "), false);
+
+    oled_set_cursor(11, 2);
+    led_t led_state = host_keyboard_led_state();
+    oled_write_P(led_state.num_lock    ? PSTR("NUM ") : PSTR("    "), false);
+    oled_write_P(led_state.caps_lock   ? PSTR("CAPS") : PSTR("    "), false);
+    oled_write_P(led_state.scroll_lock ? PSTR("SCR ") : PSTR("    "), false);
+
+    // 1 line remaining.
+}
+
+oled_rotation_t oled_init_user(oled_rotation_t rotation) {
+    if (!is_keyboard_master()) {
+        return OLED_ROTATION_180;
+    }
+    return rotation;
+}
+
 bool oled_task_user(void) {
     if (is_keyboard_master()) {
         oled_render_layer_state();
-        oled_render_keylog();
     } else {
         oled_render_logo();
     }
     return false;
 }
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  if (record->event.pressed) {
-    set_keylog(keycode, record);
-  }
-  return true;
-}
-#endif // OLED_ENABLE
+#endif

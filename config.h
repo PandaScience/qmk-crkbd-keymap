@@ -45,7 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // ---------- OLED CONFIG -----------------------------------------------------
 #define OLED_FONT_H "keyboards/crkbd/lib/glcdfont.c"
-
+#define OLED_TIMEOUT 10000
 
 // ---------- RGB LIGHTING ----------------------------------------------------
 #ifdef RGBLIGHT_ENABLE
