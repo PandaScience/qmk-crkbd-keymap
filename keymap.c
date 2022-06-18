@@ -60,6 +60,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 enum custom_keycodes {
     UPDIR = SAFE_RANGE,
+    LX_HOME,
     SCOPE,
 };
 
@@ -89,7 +90,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       _______, KC_HASH,  KC_DLR, KC_PIPE, KC_TILD,  KC_GRV,                      KC_PLUS, KC_PERC, KC_DQUO, KC_QUOT, KC_SCLN,  UC_EUR,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          _______, _______,  KC_SPC,     KC_ENT, _______, _______
+                                          LX_HOME,   UPDIR,  KC_SPC,     KC_ENT, _______, _______
                                       //`--------------------------'  `--------------------------'
   ),
 
@@ -194,12 +195,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
             case UPDIR:
                 SEND_STRING("../");
                 return false;
-
+            case LX_HOME:
+                SEND_STRING("~/");
+                return false;
             case SCOPE:
                 SEND_STRING("::");
                 return false;
         }
-
     }
 
     return true;
