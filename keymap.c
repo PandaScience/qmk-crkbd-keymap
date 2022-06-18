@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define _______ KC_TRNS
 #endif
 
+#define UC_EUR  ALGR(KC_5)
+
 #define S_H LSFT_T(KC_H)
 #define S_S RSFT_T(KC_S)
 #define C_X LCTL_T(KC_X)
@@ -45,21 +47,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define NAV_I LT(NAV, KC_I)
 #define NAV_T LT(NAV, KC_T)
 
-// this unfortunatley breaks tap-repeat on space -> use SYM layer
+// swap hands; this unfortunatley breaks tap-repeat on space -> use SYM layer
 #define SW_SPC SH_T(KC_SPC)
 #define SW_ENT SH_T(KC_ENT)
 
 #define SYS_ESC LT(SYS, KC_ESC)
 #define NUM_TAB LT(NUM, KC_TAB)
 
-#define UC_EUR  ALGR(KC_5)
 
-enum layers {BSE, SWP, SYM, NUM, FUN, NAV, SYS};
 
 enum custom_keycodes {
     UPDIR = SAFE_RANGE,
     SCOPE,
 };
+
+// TODO: add greek layer GRK
+
+// ---------- LAYERS ----------------------------------------------------------
+enum layers {BSE, SYM, NUM, FUN, NAV, SYS};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [BSE] = LAYOUT_split_3x6_3(
