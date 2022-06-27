@@ -17,8 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include QMK_KEYBOARD_H
-// https://getreuer.info/posts/keyboards/caps-word/index.html
-#include "extern/getreuer/features/caps_word.h"  // --> activate with L+R SHIFT key
 
 #define ___x___ KC_NO
 #define ___O___ KC_NO
@@ -155,29 +153,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // ---------- KEY COMBOS ------------------------------------------------------
 // taken from https://github.com/getreuer/qmk-keymap/blob/main/keymap.c
 enum combo_events {
-    // . and C => activate Caps Word.
-    CAPS_COMBO,
     // , and . => types a period, space, and sets one-shot mod for shift.
-    // This combo is useful to flow between sentences.
     END_SENTENCE_COMBO,
     COMBO_LENGTH
 };
 uint16_t COMBO_LEN = COMBO_LENGTH;
 
-const uint16_t PROGMEM caps_combo[] = {KC_DOT, KC_C, COMBO_END};
 const uint16_t PROGMEM end_sentence_combo[] = {KC_COMM, KC_DOT, COMBO_END};
 
 combo_t key_combos[] = {
-    [CAPS_COMBO] = COMBO_ACTION(caps_combo),
     [END_SENTENCE_COMBO] = COMBO_ACTION(end_sentence_combo),
 };
 
 void process_combo_event(uint16_t combo_index, bool pressed) {
     if (pressed) {
         switch(combo_index) {
-            case CAPS_COMBO:
-                caps_word_set(true);  // Activate Caps Word.
-                break;
             case END_SENTENCE_COMBO:
                 SEND_STRING(". ");
                 add_oneshot_mods(MOD_BIT(KC_LSFT));  // Set one-shot mod for shift.

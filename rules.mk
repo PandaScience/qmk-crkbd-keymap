@@ -27,5 +27,6 @@ COMBO_ENABLE = yes
 RGBLIGHT_ENABLE = no
 RGB_MATRIX_ENABLE = yes
 
-# add Caps Words code
-SRC += extern/getreuer/features/caps_word.c
+# simplify shifting characters
+CAPS_WORD_ENABLE = yes
+COMMAND_ENABLE = no
