@@ -35,6 +35,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #undef PERMISSIVE_HOLD
 #undef PREVENT_STUCK_MODIFIERS
 
+// ---------- MISC KEY SETTINGS -----------------------------------------------
+#define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
+
 // ---------- DISABLE STUFF & REDUZE SIZE
 #undef LOCKING_SUPPORT_ENABLE
 #undef LOCKING_RESYNC_ENABLE
