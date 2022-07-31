@@ -155,14 +155,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 enum combo_events {
     // , and . => types a period, space, and sets one-shot mod for shift.
     END_SENTENCE_COMBO,
+    EI_ESC,
+    RT_ESC,
     COMBO_LENGTH
 };
 uint16_t COMBO_LEN = COMBO_LENGTH;
 
 const uint16_t PROGMEM end_sentence_combo[] = {KC_COMM, KC_DOT, COMBO_END};
+const uint16_t PROGMEM ei_esc_combo[] = {G_E, NAV_I, COMBO_END};
+const uint16_t PROGMEM rt_esc_combo[] = {G_R, NAV_T, COMBO_END};
 
 combo_t key_combos[] = {
     [END_SENTENCE_COMBO] = COMBO_ACTION(end_sentence_combo),
+    [EI_ESC] = COMBO_ACTION(ei_esc_combo),
+    [RT_ESC] = COMBO_ACTION(rt_esc_combo),
 };
 
 void process_combo_event(uint16_t combo_index, bool pressed) {
@@ -172,10 +178,18 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
                 SEND_STRING(". ");
                 add_oneshot_mods(MOD_BIT(KC_LSFT));  // Set one-shot mod for shift.
                 break;
+            case EI_ESC:
+            case RT_ESC:
+                tap_code16(KC_ESC);
+                break;
         }
     }
 }
 
+//make all combos tap-only
+bool get_combo_must_tap(uint16_t index, combo_t *combo) {
+    return true;
+}
 
 // ---------- CUSTOM MACROS ---------------------------------------------------
 // https://github.com/qmk/qmk_firmware/blob/master/docs/custom_quantum_functions.md#programming-the-behavior-of-any-keycode-idprogramming-the-behavior-of-any-keycode

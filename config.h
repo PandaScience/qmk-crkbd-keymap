@@ -35,6 +35,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #undef PERMISSIVE_HOLD
 #undef PREVENT_STUCK_MODIFIERS
 
+// ---------- COMBO SETTINGS
+#define COMBO_MUST_TAP_PER_COMBO
+
 // ---------- MISC KEY SETTINGS -----------------------------------------------
 #define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
 
