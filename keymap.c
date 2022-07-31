@@ -43,7 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define G_E LGUI_T(KC_E)
 #define G_R RGUI_T(KC_R)
 
-#define sC_SCLN RCS_T(KC_SCLN)
+#define sC_MINS RCS_T(KC_MINS)
 #define sC_SLSH RCS_T(KC_SLSH)
 #define sA_Q    LSA_T(KC_Q)
 #define sA_M    LSA_T(KC_M)
@@ -82,7 +82,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       MO(SYM),     S_H,     A_A,     G_E,   NAV_I,    KC_U,                         KC_D,   NAV_T,     G_R,     A_N,     S_S,   SYM_F,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      sC_SCLN,     C_X,    sA_Q, sG_LBRC, KC_RBRC,    KC_F,                         KC_B,    KC_P,    sG_W,    sA_M,     C_J, sC_SLSH,
+      sC_MINS,     C_X,    sA_Q, sG_LBRC, KC_RBRC,    KC_F,                         KC_B,    KC_P,    sG_W,    sA_M,     C_J, sC_SLSH,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                            KC_ESC, NUM_TAB,  SW_ENT,     SW_SPC, KC_BSPC,  KC_DEL
                                       //`--------------------------'  `--------------------------'
@@ -90,13 +90,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [SYM] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      _______, ___x___, KC_UNDS, KC_LBRC, KC_RBRC, KC_CIRC,                      KC_EXLM,   KC_LT,   KC_GT,  KC_EQL, KC_AMPR, KC_SLSH,
+     KC_TILDE, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC,                      KC_CIRC, KC_AMPR, KC_ASTR, KC_MINS, KC_PLUS,  KC_GRV,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      ___O___, KC_BSLS, KC_SLSH, KC_LCBR, KC_RCBR, KC_ASTR,                      KC_QUES, KC_LPRN, KC_RPRN, KC_MINS, KC_COLN,   KC_AT,
+      ___O___, KC_PLUS,  KC_EQL, KC_LPRN, KC_RPRN, KC_DQUO,                      KC_PIPE, KC_RCBR, KC_LCBR, KC_RBRC, KC_LBRC, ___O___,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      _______, KC_HASH,  KC_DLR, KC_PIPE, KC_TILD,  KC_GRV,                      KC_PLUS, KC_PERC, KC_DQUO, KC_QUOT, KC_SCLN,  UC_EUR,
+       UC_EUR, KC_MINS, KC_UNDS, KC_LABK, KC_RABK, KC_QUOT,                      ___x___, KC_COLN, KC_SCLN, KC_SLSH, KC_BSLS, KC_QUES,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          LX_HOME,   UPDIR,  KC_ENT,     KC_SPC, _______, _______
+                                          ___x___, LX_HOME,  KC_ENT,     KC_SPC,   UPDIR, ___x___
                                       //`--------------------------'  `--------------------------'
   ),
 
