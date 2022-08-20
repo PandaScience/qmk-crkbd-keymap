@@ -41,6 +41,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ---------- MISC KEY SETTINGS -----------------------------------------------
 #define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
 
+// ---------- MOUSE KEY SETTINGS
+#define MOUSEKEY_TIME_TO_MAX 40
+#define MOUSEKEY_MAX_SPEED 5
+
 // ---------- DISABLE STUFF & REDUZE SIZE
 #undef LOCKING_SUPPORT_ENABLE
 #undef LOCKING_RESYNC_ENABLE
