@@ -192,6 +192,24 @@ bool get_combo_must_tap(uint16_t index, combo_t *combo) {
     return true;
 }
 
+// ---------- KEY OVERRIDES ---------------------------------------------------
+// https://getreuer.info/posts/keyboards/custom-shift-keys/index.html
+// https://docs.qmk.fm/#/feature_key_overrides?id=key-overrides
+const key_override_t dot_key_override = ko_make_with_layers(
+	MOD_MASK_SHIFT, KC_DOT, KC_COLN, (1 << BSE)
+);
+
+const key_override_t comma_key_override = ko_make_with_layers(
+	MOD_MASK_SHIFT, KC_COMM, KC_SCLN, (1 << BSE)
+);
+
+// This globally defines all key overrides to be used
+const key_override_t **key_overrides = (const key_override_t *[]){
+    &dot_key_override,
+    &comma_key_override,
+    NULL // Null terminate the array of overrides!
+};
+
 // ---------- CUSTOM MACROS ---------------------------------------------------
 // https://github.com/qmk/qmk_firmware/blob/master/docs/custom_quantum_functions.md#programming-the-behavior-of-any-keycode-idprogramming-the-behavior-of-any-keycode
 // https://getreuer.info/posts/keyboards/caps-word/index.html
