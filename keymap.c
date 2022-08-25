@@ -54,9 +54,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SYM_F   LT(SYM, KC_F)
 
 #define NAV_I LT(NAV, KC_I)
-#define NAV_T LT(NAV, KC_T)
+#define MSE_T LT(MSE, KC_T)
 
-// swap hands; this unfortunatley breaks tap-repeat on space -> use SYM layer
+// swap hands; this unfortunatley breaks tap-repeat on space -> use SYM/NAV layer
 #define SW_SPC SH_T(KC_SPC)
 #define SW_ENT SH_T(KC_ENT)
 
@@ -74,14 +74,14 @@ enum custom_keycodes {
 // TODO: add greek layer GRK
 
 // ---------- LAYERS ----------------------------------------------------------
-enum layers {BSE, SYM, NUM, FUN, NAV, SYS};
+enum layers {BSE, SYM, NUM, FUN, NAV, MSE, SYS};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [BSE] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       SYS_ESC,    KC_K,  KC_DOT,    KC_O, KC_COMM,    KC_Y,                         KC_V,    KC_G,    KC_C,    KC_L,    KC_Z, SYS_ESC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      SYM_EQL,     S_H,     A_A,     G_E,   NAV_I,    KC_U,                         KC_D,   NAV_T,     G_R,     A_N,     S_S,   SYM_F,
+      SYM_EQL,     S_H,     A_A,     G_E,   NAV_I,    KC_U,                         KC_D,   MSE_T,     G_R,     A_N,     S_S,   SYM_F,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       sC_MINS,     C_X,    sA_Q, sG_LBRC, KC_RBRC, KC_QUOT,                         KC_B,    KC_P,    sG_W,    sA_M,     C_J, sC_SLSH,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
@@ -127,11 +127,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [NAV] = LAYOUT_split_3x6_3(
   //,------------------------------------------------------.                    ,-----------------------------------------------------.
-      ___x___, ___x___, KC_WH_D, KC_MS_U, KC_WH_U, ___x___,                      ___x___, KC_HOME, KC_PGDN, KC_PGUP,  KC_END, ___x___,
+      ___x___, ___x___, ___x___,___x___,  ___x___, ___x___,                      ___x___, KC_HOME, KC_PGDN, KC_PGUP,  KC_END, ___x___,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      ___x___, KC_BTN5, KC_MS_L, KC_MS_D, KC_MS_R, ___x___,                      ___x___, KC_LEFT, KC_DOWN,   KC_UP, KC_RGHT, ___x___,
+      ___x___,     SFT,     ALT,     GUI, ___x___, ___x___,                      ___x___, KC_LEFT, KC_DOWN,   KC_UP, KC_RGHT, ___x___,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      ___x___, KC_BTN4, ___x___, ___x___, ___x___, ___x___,                      ___x___, KC_PSTE, KC_COPY,  KC_CUT,  KC_INS, ___x___,
+       S_CTRL,    CTRL,   S_ALT,   S_GUI, ___x___, ___x___,                      ___x___, KC_PSTE, KC_COPY,  KC_CUT,  KC_INS, ___x___,
+  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
+                                          ___x___,  KC_TAB,  KC_ENT,     KC_SPC, KC_BSPC,  KC_DEL
+                                      //`--------------------------'  `--------------------------'
+  ),
+
+  [MSE] = LAYOUT_split_3x6_3(
+  //,------------------------------------------------------.                    ,-----------------------------------------------------.
+      ___x___, ___x___, KC_WH_D, KC_MS_U, KC_WH_U, ___x___,                      ___x___, ___x___, ___x___, ___x___, ___x___, ___x___,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      ___x___, KC_BTN5, KC_MS_L, KC_MS_D, KC_MS_R, ___x___,                      ___x___, ___O___, KC_ACL0, KC_ACL1, KC_ACL2, ___x___,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      ___x___, KC_BTN4, ___x___, ___x___, ___x___, ___x___,                      ___x___, ___x___, ___x___, ___x___, ___x___, ___x___,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_BTN2, KC_BTN3, KC_BTN1,    KC_BTN1, KC_BTN3, KC_BTN2
                                       //`--------------------------'  `--------------------------'
@@ -164,7 +176,7 @@ uint16_t COMBO_LEN = COMBO_LENGTH;
 
 const uint16_t PROGMEM end_sentence_combo[] = {KC_COMM, KC_DOT, COMBO_END};
 const uint16_t PROGMEM ei_esc_combo[] = {G_E, NAV_I, COMBO_END};
-const uint16_t PROGMEM rt_esc_combo[] = {G_R, NAV_T, COMBO_END};
+const uint16_t PROGMEM rt_esc_combo[] = {G_R, MSE_T, COMBO_END};
 
 combo_t key_combos[] = {
     [END_SENTENCE_COMBO] = COMBO_ACTION(end_sentence_combo),
@@ -283,6 +295,12 @@ void oled_render_layer_state(void) {
             oled_write_ln_P(PSTR("    _    "), false);
             oled_write_ln_P(PSTR("|\\||_|\\ /"), false);
             oled_write_ln_P(PSTR("| || | V "), false);
+            break;
+        case MSE:
+            /* oled_write_ln_P(PSTR("MSE"), true); */
+            oled_write_ln_P(PSTR("    __ __"), false);
+            oled_write_ln_P(PSTR("|V|(_ |_ "), false);
+            oled_write_ln_P(PSTR("| |__)|__"), false);
             break;
         case SYS:
             /* oled_write_ln_P(PSTR("SYS"), true); */
