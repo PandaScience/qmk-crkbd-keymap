@@ -43,15 +43,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define G_E LGUI_T(KC_E)
 #define G_R RGUI_T(KC_R)
 
-#define sC_MINS RCS_T(KC_MINS)
+#define sC_PLUS RCS_T(KC_KP_PLUS)
 #define sC_SLSH RCS_T(KC_SLSH)
 #define sA_Q    LSA_T(KC_Q)
 #define sA_M    LSA_T(KC_M)
 #define sG_LBRC LSG_T(KC_LBRC)
 #define sG_W    LSG_T(KC_W)
 
-#define SYM_EQL LT(SYM, KC_EQL)
-#define SYM_F   LT(SYM, KC_F)
+#define SYM_MINS LT(SYM, KC_MINS)
+#define SYM_F    LT(SYM, KC_F)
 
 #define NAV_I LT(NAV, KC_I)
 #define MSE_T LT(MSE, KC_T)
@@ -69,6 +69,7 @@ enum custom_keycodes {
     UPDIR = SAFE_RANGE,
     LX_HOME,
     SCOPE,
+    PLUS_EQUAL
 };
 
 // TODO: add greek layer GRK
@@ -81,9 +82,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       SYS_ESC,    KC_K,  KC_DOT,    KC_O, KC_COMM,    KC_Y,                         KC_V,    KC_G,    KC_C,    KC_L,    KC_Z, SYS_ESC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      SYM_EQL,     S_H,     A_A,     G_E,   NAV_I,    KC_U,                         KC_D,   MSE_T,     G_R,     A_N,     S_S,   SYM_F,
+     SYM_MINS,     S_H,     A_A,     G_E,   NAV_I,    KC_U,                         KC_D,   MSE_T,     G_R,     A_N,     S_S,   SYM_F,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      sC_MINS,     C_X,    sA_Q, sG_LBRC, KC_RBRC, KC_QUOT,                         KC_B,    KC_P,    sG_W,    sA_M,     C_J, sC_SLSH,
+      sC_PLUS,     C_X,    sA_Q, sG_LBRC, KC_RBRC, KC_QUOT,                         KC_B,    KC_P,    sG_W,    sA_M,     C_J, sC_SLSH,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                            KC_ESC, NUM_TAB,  SW_ENT,     SW_SPC, KC_BSPC,  KC_DEL
                                       //`--------------------------'  `--------------------------'
@@ -215,35 +216,57 @@ const key_override_t comma_key_override = ko_make_with_layers(
 	MOD_MASK_SHIFT, KC_COMM, KC_SCLN, (1 << BSE)
 );
 
+const key_override_t test_key_override = ko_make_basic(
+	MOD_MASK_SHIFT, KC_KP_PLUS, KC_3
+);
+
 // This globally defines all key overrides to be used
 const key_override_t **key_overrides = (const key_override_t *[]){
     &dot_key_override,
     &comma_key_override,
+    &test_key_override,
     NULL // Null terminate the array of overrides!
 };
 
 // ---------- CUSTOM MACROS ---------------------------------------------------
 // https://github.com/qmk/qmk_firmware/blob/master/docs/custom_quantum_functions.md#programming-the-behavior-of-any-keycode-idprogramming-the-behavior-of-any-keycode
 // https://getreuer.info/posts/keyboards/caps-word/index.html
+uint8_t mod_state;
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
-    if (!process_caps_word(keycode, record)) { return false; }
-
     /* const uint8_t mods = get_mods(); */
     /* const uint8_t oneshot_mods = get_oneshot_mods(); */
     /* const bool shifted = (mods | oneshot_mods) & MOD_MASK_SHIFT; */
-
+    mod_state = get_mods();
     // for more unicode, see https://github.com/getreuer/qmk-keymap/blob/main/keymap.c
     if (record->event.pressed) {
         switch (keycode) {
-            case UPDIR:
-                SEND_STRING("../");
-                return false;
-            case LX_HOME:
-                SEND_STRING("~/");
-                return false;
-            case SCOPE:
-                SEND_STRING("::");
-                return false;
+        case UPDIR:
+            SEND_STRING("../");
+            return false;
+        case LX_HOME:
+            SEND_STRING("~/");
+            return false;
+        case SCOPE:
+            SEND_STRING("::");
+            return false;
+        }
+    }
+
+    switch (keycode) {
+    case PLUS_EQUAL:
+        if (record->event.pressed) {
+            if (mod_state & MOD_MASK_SHIFT) {
+                del_mods(MOD_MASK_SHIFT);
+                register_code(KC_EQL);
+                set_mods(mod_state);
+            } else {
+                register_code16(KC_PLUS);
+            }
+            return false;
+        } else {
+            unregister_code16(KC_PLUS);
+            unregister_code16(KC_EQL);
+            return false;
         }
     }
 
