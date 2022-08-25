@@ -44,6 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ---------- MOUSE KEY SETTINGS
 #define MOUSEKEY_TIME_TO_MAX 40
 #define MOUSEKEY_MAX_SPEED 5
+#define MK_COMBINED
 
 // ---------- DISABLE STUFF & REDUZE SIZE
 #undef LOCKING_SUPPORT_ENABLE
