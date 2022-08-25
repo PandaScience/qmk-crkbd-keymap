@@ -43,15 +43,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define G_E LGUI_T(KC_E)
 #define G_R RGUI_T(KC_R)
 
-#define sC_MINS RCS_T(KC_MINS)
+#define sC_EQL  RCS_T(KC_EQL)
 #define sC_SLSH RCS_T(KC_SLSH)
 #define sA_Q    LSA_T(KC_Q)
 #define sA_M    LSA_T(KC_M)
 #define sG_LBRC LSG_T(KC_LBRC)
 #define sG_W    LSG_T(KC_W)
 
-#define SYM_EQL LT(SYM, KC_EQL)
-#define SYM_F   LT(SYM, KC_F)
+#define SYM_MINS LT(SYM, KC_MINS)
+#define SYM_F    LT(SYM, KC_F)
 
 #define NAV_I LT(NAV, KC_I)
 #define MSE_T LT(MSE, KC_T)
@@ -81,9 +81,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       SYS_ESC,    KC_K,  KC_DOT,    KC_O, KC_COMM,    KC_Y,                         KC_V,    KC_G,    KC_C,    KC_L,    KC_Z, SYS_ESC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      SYM_EQL,     S_H,     A_A,     G_E,   NAV_I,    KC_U,                         KC_D,   MSE_T,     G_R,     A_N,     S_S,   SYM_F,
+     SYM_MINS,     S_H,     A_A,     G_E,   NAV_I,    KC_U,                         KC_D,   MSE_T,     G_R,     A_N,     S_S,   SYM_F,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      sC_MINS,     C_X,    sA_Q, sG_LBRC, KC_RBRC, KC_QUOT,                         KC_B,    KC_P,    sG_W,    sA_M,     C_J, sC_SLSH,
+       sC_EQL,     C_X,    sA_Q, sG_LBRC, KC_RBRC, KC_QUOT,                         KC_B,    KC_P,    sG_W,    sA_M,     C_J, sC_SLSH,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                            KC_ESC, NUM_TAB,  SW_ENT,     SW_SPC, KC_BSPC,  KC_DEL
                                       //`--------------------------'  `--------------------------'
