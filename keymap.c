@@ -171,6 +171,7 @@ enum combo_events {
     END_SENTENCE_COMBO,
     EI_ESC,
     RT_ESC,
+    BKSP_DEL,
     COMBO_LENGTH
 };
 uint16_t COMBO_LEN = COMBO_LENGTH;
@@ -178,11 +179,13 @@ uint16_t COMBO_LEN = COMBO_LENGTH;
 const uint16_t PROGMEM end_sentence_combo[] = {KC_COMM, KC_DOT, COMBO_END};
 const uint16_t PROGMEM ei_esc_combo[] = {G_E, NAV_I, COMBO_END};
 const uint16_t PROGMEM rt_esc_combo[] = {G_R, MSE_T, COMBO_END};
+const uint16_t PROGMEM bksp_del_combo[] = {KC_BSPC, SW_DEL, COMBO_END};
 
 combo_t key_combos[] = {
     [END_SENTENCE_COMBO] = COMBO_ACTION(end_sentence_combo),
     [EI_ESC] = COMBO_ACTION(ei_esc_combo),
     [RT_ESC] = COMBO_ACTION(rt_esc_combo),
+    [BKSP_DEL] = COMBO(bksp_del_combo, TG(NUM)),
 };
 
 void process_combo_event(uint16_t combo_index, bool pressed) {
