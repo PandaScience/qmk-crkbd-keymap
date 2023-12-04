@@ -1,5 +1,5 @@
 OLED_ENABLE = yes
-OLED_DRIVER = SSD1306
+OLED_DRIVER = ssd1306
 BOOTLOADER = atmel-dfu
 
 # Link Time Optimization -> smaller size
