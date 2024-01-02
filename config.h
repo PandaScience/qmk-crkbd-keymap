@@ -24,6 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // for EE_HANDS to work automatically, run once from qmk root path:
 // make crkbd:pandascience:dfu-split-left
 // make crkbd:pandascience:dfu-split-right
+// or equivalently
+// qmk flash -kb crkbd -km pandascience -bl dfu-split-left
+// qmk flash -kb crkbd -km pandascience -bl dfu-split-right
 #define EE_HANDS
 
 // detect primary/secondary reliably
