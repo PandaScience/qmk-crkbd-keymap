@@ -32,6 +32,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // detect primary/secondary reliably
 #define SPLIT_USB_DETECT
 
+// ---------- AUTOSHIFT SETTINGS ----------------------------------------------
+#define AUTO_SHIFT_TIMEOUT 150
+// #define AUTO_SHIFT_MODIFIERS
+#define RETRO_SHIFT 500
+#define NO_AUTO_SHIFT_SPECIAL
+
 // ---------- TAP vs HOLD SETTINGS --------------------------------------------
 #define TAPPING_TERM 200
 #undef PERMISSIVE_HOLD

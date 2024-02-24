@@ -18,6 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include QMK_KEYBOARD_H
 
+#include "macros.h"
+
 #define ___x___ KC_NO
 #define ___O___ KC_NO
 #ifndef _______
@@ -26,32 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define UC_EUR  ALGR(KC_5)
 
-#define CTRL   KC_LCTL
-#define SFT    KC_LSFT
-#define ALT    KC_LALT
-#define GUI    KC_LGUI
-#define S_CTRL S(KC_LCTL)
-#define S_ALT  S(KC_LALT)
-#define S_GUI  S(KC_LGUI)
-
-#define S_H LSFT_T(KC_H)
-#define S_S RSFT_T(KC_S)
-#define C_X LCTL_T(KC_X)
-#define C_J RCTL_T(KC_J)
-#define A_A LALT_T(KC_A)
-#define A_N ALGR_T(KC_N)
-#define G_E LGUI_T(KC_E)
-#define G_R RGUI_T(KC_R)
-
-#define sC_EQL  RCS_T(KC_EQL)
-#define sC_SLSH RCS_T(KC_SLSH)
-#define sA_Q    LSA_T(KC_Q)
-#define sA_M    LSA_T(KC_M)
-#define sG_LBRC LSG_T(KC_LBRC)
-#define sG_W    LSG_T(KC_W)
-
-#define SYM_MINS LT(SYM, KC_MINS)
-#define SYM_F    LT(SYM, KC_F)
+// layer shortcuts
+#define sym(KC)  LT(SYM, KC)
+#define num(KC)  LT(NUM, KC)
 
 #define NAV_I LT(NAV, KC_I)
 #define MSE_T LT(MSE, KC_T)
@@ -65,7 +44,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SYS_ESC LT(SYS, KC_ESC)
 
 
-
 enum custom_keycodes {
     UPDIR = SAFE_RANGE,
     LX_HOME,
@@ -74,25 +52,28 @@ enum custom_keycodes {
 
 // TODO: add greek layer GRK
 
+#define S_S LSFT_T(KC_S)
+#define S_I RSFT_T(KC_I)
+
 // ---------- LAYERS ----------------------------------------------------------
 enum layers {BSE, SYM, NUM, FUN, NAV, MSE, SYS};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [BSE] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      SYS_ESC,    KC_K,  KC_DOT,    KC_O, KC_COMM,    KC_Y,                         KC_V,    KC_G,    KC_C,    KC_L,    KC_Z, SYS_ESC,
+      SYS_ESC,      _V,      _M,      _L,      _C,      _P,                           _B,   _QUOT,      _U,      _O,      _Q, SYS_ESC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-     SYM_MINS,     S_H,     A_A,     G_E,   NAV_I,    KC_U,                         KC_D,   MSE_T,     G_R,     A_N,     S_S,   SYM_F,
+      ___x___, sym(_S),  aL(_T),  cL(_R),  sL(_D),      _Y,                           _F,  sR(_N),  cR(_E),  aR(_A), sym(_I), ___x___,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-       sC_EQL,     C_X,    sA_Q, sG_LBRC, KC_RBRC, KC_QUOT,                         KC_B,    KC_P,    sG_W,    sA_M,     C_J, sC_SLSH,
+      ___x___,  gL(_X),      _K,      _J,      _G,      _W,                           _Z,      _H,   _COMM,  _DOT, gR(_SLSH), ___x___,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                           SW_ESC, NUM_TAB,  KC_ENT,     KC_SPC, KC_BSPC,  SW_DEL
+                                          ___x___, NUM_TAB,    _ENT,       _SPC,   _BSPC,  SW_DEL
                                       //`--------------------------'  `--------------------------'
   ),
 
   [SYM] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-     KC_TILDE, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, ___x___,                      ___x___, KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR,  KC_GRV,
+      ___x___,KC_TILDE, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR,                      KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR,  KC_GRV, ___x___,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       ___O___, ___x___, ___x___, KC_LPRN, KC_RPRN, ___x___,                      KC_PIPE, KC_COLN, KC_SCLN, ___x___, ___x___, ___O___,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -169,22 +150,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 enum combo_events {
     // , and . => types a period, space, and sets one-shot mod for shift.
     END_SENTENCE_COMBO,
-    EI_ESC,
-    RT_ESC,
+    LH_ESC,
+    RH_ESC,
     BKSP_DEL,
     COMBO_LENGTH
 };
 uint16_t COMBO_LEN = COMBO_LENGTH;
 
 const uint16_t PROGMEM end_sentence_combo[] = {KC_COMM, KC_DOT, COMBO_END};
-const uint16_t PROGMEM ei_esc_combo[] = {G_E, NAV_I, COMBO_END};
-const uint16_t PROGMEM rt_esc_combo[] = {G_R, MSE_T, COMBO_END};
+const uint16_t PROGMEM lh_esc_combo[] = {_R, _D, COMBO_END};
+const uint16_t PROGMEM rh_esc_combo[] = {_N, _A, COMBO_END};
 const uint16_t PROGMEM bksp_del_combo[] = {KC_BSPC, SW_DEL, COMBO_END};
 
 combo_t key_combos[] = {
     [END_SENTENCE_COMBO] = COMBO_ACTION(end_sentence_combo),
-    [EI_ESC] = COMBO_ACTION(ei_esc_combo),
-    [RT_ESC] = COMBO_ACTION(rt_esc_combo),
+    [LH_ESC] = COMBO_ACTION(lh_esc_combo),
+    [RH_ESC] = COMBO_ACTION(rh_esc_combo),
     [BKSP_DEL] = COMBO(bksp_del_combo, TG(NUM)),
 };
 
@@ -195,8 +176,8 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
                 SEND_STRING(". ");
                 add_oneshot_mods(MOD_BIT(KC_LSFT));  // Set one-shot mod for shift.
                 break;
-            case EI_ESC:
-            case RT_ESC:
+            case LH_ESC:
+            case RH_ESC:
                 tap_code16(KC_ESC);
                 break;
         }
@@ -253,6 +234,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
 
     return true;
 }
+
+
+// ---------- AUTOSHIFT FOR TAP-HOLD-------------------------------------------
+// https://docs.qmk.fm/#/feature_auto_shift?id=retro-shift
+// https://docs.qmk.fm/#/feature_auto_shift?id=custom-shifted-values
+bool get_custom_auto_shifted_key(uint16_t keycode, keyrecord_t *record) {
+    if (IS_RETRO(keycode)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 
 
 // ---------- OLED CONFIG -----------------------------------------------------

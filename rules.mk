@@ -25,8 +25,9 @@ COMBO_ENABLE = yes
 
 # use advanced matrix effects (or do not and save space)
 RGBLIGHT_ENABLE = no
-RGB_MATRIX_ENABLE = yes
+RGB_MATRIX_ENABLE = no
 
 # simplify shifting characters
 CAPS_WORD_ENABLE = yes
+AUTO_SHIFT_ENABLE = yes
 COMMAND_ENABLE = no
